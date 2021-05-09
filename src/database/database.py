@@ -20,7 +20,6 @@ ModelBase = declarative_base()
 ModelBase.query = db_session.query_property()
 
 
-def init_database():
-    import model
-
+def init_database() -> None:
+    """ Initialize the database """
     ModelBase.metadata.create_all(bind=engine)
