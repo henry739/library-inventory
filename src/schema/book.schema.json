@@ -1,0 +1,25 @@
+{
+  "$id": "https://github.com/henry-jewell/library-inventory/book.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Book",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "The book's title"
+    },
+    "author": {
+      "type": "string",
+      "description": "The author's full name"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "author"
+  ]
+}

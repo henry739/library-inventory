@@ -1,6 +1,9 @@
 from flask import Flask, make_response
 from flask_restful import Api, Resource
 
+from api.books.books_controller import BooksController
+from database.database import init_database
+
 API_BASE = "/api/v1"
 
 
@@ -10,9 +13,11 @@ class TestResource(Resource):
 
 
 if __name__ == "__main__":
+    init_database()
     server = Flask(__name__)
     api = Api(server)
 
     api.add_resource(TestResource, "/")
+    api.add_resource(BooksController, f"{API_BASE}/books")
 
     server.run(host="0.0.0.0")
