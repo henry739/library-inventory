@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  library-db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: elder_librarian
+      POSTGRES_PASSWORD: books
+      POSTGRES_DB: library
+    ports:
+      - 5432:5432
+  library-inventory-api:
+    image: library-inventory-api:latest
+    restart: always
+    ports:
+      - 5000:5000

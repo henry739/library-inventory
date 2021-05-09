@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, ForeignKey
 
 from database.database import ModelBase
 
@@ -19,5 +19,5 @@ class Loan(ModelBase):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     due_date = Column(DateTime())
-    user_id = Column(Integer(), ForeignKey("user.id"))
+    user_id = Column(Integer(), ForeignKey("registereduser.id"))
     book_id = Column(Integer(), ForeignKey("book.id"))

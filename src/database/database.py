@@ -1,15 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.pool import StaticPool
 
 
 # This allows SqlAlchemy to interact with our database. For testing purposes, currently an in-memory SQLite DB.
 engine = create_engine(
-    "sqlite://",
-    poolclass=StaticPool,
-    convert_unicode =True,
-    connect_args={"check_same_thread": False}
+    "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
+    convert_unicode=True,
 )
 
 # This session is used throughout the entire program, and is used directly by model classes.

@@ -3,3 +3,4 @@ flask-restful
 sqlalchemy==1.3.23
 jsonschema
 pytest
+psycopg2
