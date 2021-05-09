@@ -35,7 +35,7 @@ class BooksController(Resource):
             return make_response("Invalid request format", 400)
 
         # Persist
-        book = Book(**request.json)  # Unexpected fields are disallowed during validation.
+        book = Book(**request.json)
         db_session.add(book)
         db_session.commit()
 
