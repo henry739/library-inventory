@@ -11,11 +11,7 @@ engine = create_engine(
 
 # This session is used throughout the entire program, and is used directly by model classes.
 db_session = scoped_session(
-    sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=engine
-    )
+    sessionmaker(autocommit=False, autoflush=False, bind=engine)
 )
 
 
@@ -26,4 +22,5 @@ ModelBase.query = db_session.query_property()
 
 def init_database():
     import model
+
     ModelBase.metadata.create_all(bind=engine)

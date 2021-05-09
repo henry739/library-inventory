@@ -18,6 +18,7 @@ class LoansController(Resource):
     """
     Handles requests for checking books in and out
     """
+
     def __init__(self):
         self._loan_length = 7
         self.validator = SchemaValidator("schema/loan.schema.json")
@@ -47,8 +48,7 @@ class LoansController(Resource):
         return True
 
     def post(self) -> Response:
-        """
-        """
+        """ """
         # Validate
         try:
             self.validator.validate(request.json)
@@ -75,7 +75,6 @@ class LoansController(Resource):
         return make_response(f"User {user_id} cannot be loaned {book_id}", 200)
 
     def get(self) -> Response:
-        """
-        """
+        """ """
         loans = Loan.query.all()
         return make_response(jsonify(loans), 200)

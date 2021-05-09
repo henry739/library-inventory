@@ -14,6 +14,7 @@ class LoansIdController(Resource):
     """
     Handles requests for managing specific loans
     """
+
     def get(self, loan_id: int) -> Response:
         """
 

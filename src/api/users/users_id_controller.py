@@ -13,6 +13,7 @@ class UsersIdController(Resource):
     """
     Handles requests for specific user resources.
     """
+
     def get(self, user_id: int) -> Response:
         """
         Return user with ID=user_id, if exists.
@@ -38,7 +39,10 @@ class UsersIdController(Resource):
             return make_response("User does not exist in the system", 404)
 
         if len(user.loans):
-            return make_response("User has active loans. These must be resolved before removing the user", 400)
+            return make_response(
+                "User has active loans. These must be resolved before removing the user",
+                400,
+            )
 
         db_session.delete(user)
         db_session.commit()

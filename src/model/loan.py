@@ -8,8 +8,8 @@ from database.database import ModelBase
 
 @dataclass
 class Loan(ModelBase):
-    """
-    """
+    """ """
+
     __tablename__ = "loan"
 
     id: int

@@ -36,7 +36,9 @@ class UsersController(Resource):
             return make_response("Invalid request format", 400)
 
         # Persist
-        user = User(**request.json)  # Unexpected fields are disallowed during validation.
+        user = User(
+            **request.json
+        )  # Unexpected fields are disallowed during validation.
         db_session.add(user)
         db_session.commit()
 

@@ -13,6 +13,7 @@ class User(ModelBase):
     """
     A single registered user of the library. Note, this does not include Librarians.
     """
+
     __tablename__ = "registereduser"  # Avoids conflict with postgres builtin tables.
 
     id: int

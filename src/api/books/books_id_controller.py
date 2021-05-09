@@ -13,6 +13,7 @@ class BooksIdController(Resource):
     """
     Handles requests for specific book resources.
     """
+
     def get(self, book_id: int) -> Response:
         """
         Return book with ID of book_id, if exists.
@@ -39,7 +40,10 @@ class BooksIdController(Resource):
             return make_response("Book does not exist in the system", 404)
 
         if len(book.loans):
-            return make_response("Book is on loan. This loan must be resolved before removing the book", 400)
+            return make_response(
+                "Book is on loan. This loan must be resolved before removing the book",
+                400,
+            )
 
         db_session.delete(book)
         db_session.commit()

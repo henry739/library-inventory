@@ -13,6 +13,7 @@ class Book(ModelBase):
     """
     A single copy of a book in the library's inventory.
     """
+
     __tablename__ = "book"
 
     id: int
