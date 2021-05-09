@@ -5,25 +5,26 @@ from flask_restful import Resource
 from jsonschema import ValidationError
 
 from database.database import db_session
-from model.book import Book
+from model.user import User
 from schema.schema_validator import SchemaValidator
 
 logger = logging.Logger(__name__)
 
 
-class BooksController(Resource):
+class UsersController(Resource):
     """
-    Handles requests for book resources.
+    Handles requests for user resources.
     """
 
     def __init__(self):
-        self.validator = SchemaValidator("schema/book.schema.json")
+        self.validator = SchemaValidator("schema/user.schema.json")
 
     def post(self) -> Response:
         """
         Create a new book in the inventory.
         :return: Book ID and 201 on successful creation, 400 if validation fails.
         """
+
         # Validate
         try:
             self.validator.validate(request.json)
@@ -35,19 +36,19 @@ class BooksController(Resource):
             return make_response("Invalid request format", 400)
 
         # Persist
-        book = Book(**request.json)  # Unexpected fields are disallowed during validation.
-        db_session.add(book)
+        user = User(**request.json)  # Unexpected fields are disallowed during validation.
+        db_session.add(user)
         db_session.commit()
 
         # Respond
-        return make_response(str(book.id), 201)
+        return make_response(str(user.id), 201)
 
     def get(self) -> Response:
         """
-        Return all books in the inventory exactly matching the title GET parameter.
-        :return: List of books and 200 on success
+        Return all users in the system exactly matching the full_name GET parameter.
+        :return: List of users and 200 on success
         """
-        title = request.args.get("title")
-        result = Book.query.filter(Book.title == title).all()
+        full_name = request.args.get("full_name")
+        result = User.query.filter(User.full_name == full_name).all()
 
         return make_response(jsonify(result), 200)

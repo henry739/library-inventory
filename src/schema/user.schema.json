@@ -1,0 +1,22 @@
+{
+  "$id": "https://github.com/henry-jewell/library-inventory/user.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "User",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "The user's full name",
+      "maxLength": 200,
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "full_name"
+  ]
+}
