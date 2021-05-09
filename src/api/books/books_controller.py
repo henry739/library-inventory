@@ -47,6 +47,9 @@ class BooksController(Resource):
         # Validate
         try:
             validate(instance=request.json, schema=self._get_schema())
+            if "id" in request.json:
+                return make_response("New Book records should not contain an ID", 400)
+
         except ValidationError:
             logger.exception(f"Request body failed validation against JsonSchema")
             return make_response("Invalid request format", 400)

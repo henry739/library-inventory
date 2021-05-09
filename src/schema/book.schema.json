@@ -10,11 +10,15 @@
     },
     "title": {
       "type": "string",
-      "description": "The book's title"
+      "description": "The book's title",
+      "maxLength": 500,
+      "minLength": 1
     },
     "author": {
       "type": "string",
-      "description": "The author's full name"
+      "description": "The author's full name",
+      "maxLength": 200,
+      "minLength": 1
     }
   },
   "additionalProperties": false,
