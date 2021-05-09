@@ -17,7 +17,8 @@
       "description": "Book's ID"
     },
     "due_date": {
-      "type": "date-time",
+      "type": "string",
+      "format": "date-time",
       "description": "Datetime indicating when the book is due to be checked in"
     }
   },

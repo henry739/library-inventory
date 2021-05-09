@@ -18,7 +18,7 @@ class UsersIdController(Resource):
         Return user with ID=user_id, if exists.
 
         :param user_id: ID of user to retrieve.
-        :return: User matching ID and 200 on successful creation, 404 if not present
+        :return: User matching ID and 200 on success, 404 if not present
         """
         user = User.query.filter(User.id == user_id).first()
         if user is None:
@@ -36,6 +36,9 @@ class UsersIdController(Resource):
         user = User.query.filter(User.id == user_id).first()
         if user is None:
             return make_response("User does not exist in the system", 404)
+
+        if len(user.loans):
+            return make_response("User has active loans. These must be resolved before removing the user", 400)
 
         db_session.delete(user)
         db_session.commit()
