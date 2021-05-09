@@ -1,13 +1,21 @@
 from flask import Flask, request, jsonify
+from flask_restful import Api
+
+from controller.books import BooksController, BooksIdController
 from model.database import init_db, db_session
 from model.book import Book
 from model.registered_user import RegisteredUser
 from model.loan import Loan
 from datetime import datetime
 
+API_BASE = "/api/v1"
+
 init_db()
 server = Flask(__name__)
-API_BASE = "/api/v1"
+api = Api(server)
+
+api.add_resource(BooksController, f"{API_BASE}/books")
+api.add_resource(BooksIdController, f"{API_BASE}/books/<int:book_id>")
 
 
 # TODO: Validate input
@@ -22,7 +30,7 @@ def shutdown_session(exception=None):
 
 
 # Books API
-@server.route(f"{API_BASE}/books", methods=["POST"])
+# @server.route(f"{API_BASE}/books", methods=["POST"])
 def books_create():
     title = request.json.get("title")
     author = request.json.get("author")
@@ -34,14 +42,14 @@ def books_create():
     return f"{book.id}", 201
 
 
-@server.route(f"{API_BASE}/books", methods=["GET"])
+# @server.route(f"{API_BASE}/books", methods=["GET"])
 def books_search():
     title = request.args.get("title")
     result = Book.query.filter(Book.title == title).all()
     return jsonify(result), 200
 
 
-@server.route(f"{API_BASE}/books/<int:book_id>", methods=["GET", "DELETE"])
+# @server.route(f"{API_BASE}/books/<int:book_id>", methods=["GET", "DELETE"])
 def books_by_id(book_id):
     if request.method == "GET":
         result = Book.query.filter(Book.id == book_id).first()
