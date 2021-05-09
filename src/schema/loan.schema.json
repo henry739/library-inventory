@@ -1,0 +1,30 @@
+{
+  "$id": "https://github.com/henry-jewell/library-inventory/loan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Loan",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier"
+    },
+    "user_id": {
+      "type": "integer",
+      "description": "User's ID"
+    },
+    "book_id": {
+      "type": "integer",
+      "description": "Book's ID"
+    },
+    "due_date": {
+      "type": "date-time",
+      "description": "Datetime indicating when the book is due to be checked in"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "user_id",
+    "book_id",
+    "due_date"
+  ]
+}
