@@ -1,6 +1,17 @@
 # library-inventory
 
-## To-Dos & Extensions
+### Steps to get up and running
+1. Ensure you're in the root of the project directory
+2. `docker build -t library-inventory-api:latest .`
+3. `docker-compose -f stack.yml up`
+
+### Stopping the services
+In order to start over with a fresh data model, run:
+
+`docker-compose -f stack.yml down -v`
+
+
+### To-Dos & Extensions
 1. Handle race conditions / stale data
 2. ~~Prevent deletion of books if active loans use them~~
 3. Update integration / smoke tests and add unit tests
