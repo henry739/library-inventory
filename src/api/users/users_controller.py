@@ -21,8 +21,8 @@ class UsersController(Resource):
 
     def post(self) -> Response:
         """
-        Create a new book in the inventory.
-        :return: Book ID and 201 on successful creation, 400 if validation fails.
+        Create a new user in the system.
+        :return: User ID and 201 on successful creation, 400 if validation fails.
         """
 
         # Validate
