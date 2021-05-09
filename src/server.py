@@ -15,4 +15,4 @@ if __name__ == "__main__":
 
     api.add_resource(TestResource, "/")
 
-    server.run()
+    server.run(host="0.0.0.0")
