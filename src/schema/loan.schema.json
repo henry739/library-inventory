@@ -11,17 +11,11 @@
     "book_id": {
       "type": "integer",
       "description": "Book's ID"
-    },
-    "due_date": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Datetime indicating when the book is due to be checked in"
     }
   },
   "additionalProperties": false,
   "required": [
     "user_id",
-    "book_id",
-    "due_date"
+    "book_id"
   ]
 }

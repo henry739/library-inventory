@@ -4,7 +4,7 @@ from flask import jsonify, request, make_response, Response
 from flask_restful import Resource
 from jsonschema import ValidationError
 
-from database.database import db_session
+from model.database import database
 from model.user import User
 from schema.schema_validator import SchemaValidator
 
@@ -16,8 +16,8 @@ class UsersController(Resource):
     Handles requests for user resources.
     """
 
-    def __init__(self):
-        self.validator = SchemaValidator("schema/user.schema.json")
+    def __init__(self, schema_root):
+        self.validator = SchemaValidator(f"{schema_root}/user.schema.json")
 
     def post(self) -> Response:
         """
@@ -33,8 +33,8 @@ class UsersController(Resource):
 
         # Persist
         user = User(**request.json)  # The above validation catches unwanted fields.
-        db_session.add(user)
-        db_session.commit()
+        database.session.add(user)
+        database.session.commit()
 
         return make_response(str(user.id), 201)
 
