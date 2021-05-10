@@ -47,6 +47,10 @@ class UsersTests(BaseTestCase):
         self.assertEqual(int(resource_id), user.get("id"))
         self.assertEqual(200, status)
 
+    def test_get_missing_user_returns_404(self):
+        rv, status = self.get_by_id("/users", 100)
+        self.assertEqual(404, status)
+
     def test_multiple_users_can_be_retrieved_by_id(self):
         registrations = self.register_users_by_name(["Alice", "Bob", "Charlie", "David", "Eve"])
 
@@ -96,3 +100,7 @@ class UsersTests(BaseTestCase):
         self.assertEqual(200, delete_status)
         self.assertEqual(user_id, deleted_user_id)
         self.assertEqual(404, post_delete_status)
+
+    def test_deletion_of_missing_resource_returns_404(self):
+        rv, status = self.delete_by_id("/users", 100)
+        self.assertEqual(404, status)
