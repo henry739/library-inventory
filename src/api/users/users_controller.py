@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from jsonschema import ValidationError
 
+from api.auth.login_controller import LoginController
 from model.database import database
 from model.user import User
 from schema.schema_validator import SchemaValidator

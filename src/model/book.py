@@ -22,6 +22,6 @@ class Book(database.Model):
     loans: List[Loan]
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(500), unique=False)
-    author = Column(String(200), unique=False)
+    title = Column(String(500), unique=False, nullable=False)
+    author = Column(String(200), unique=False, nullable=False)
     loans = relationship("Loan", viewonly=True)

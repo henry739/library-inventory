@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from jsonschema import ValidationError
 
+from api.auth.login_controller import LoginController
 from model.database import database
 from model.book import Book
 from schema.schema_validator import SchemaValidator
@@ -21,6 +22,7 @@ class BooksController(Resource):
         self.validator = SchemaValidator(f"{schema_root}/book.schema.json")
 
     @jwt_required()
+    @LoginController.senior_authorization_required
     def post(self) -> Response:
         """
         Create a new book in the inventory.

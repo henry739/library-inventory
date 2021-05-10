@@ -6,6 +6,7 @@ from base_test_case import BaseTestCase
 class UsersTests(BaseTestCase):
     def setUp(self):
         super().setUp()
+        # self.login("librarian-barry", "books5life")
         self.login("senior-librarian-agatha", "books4life")
 
     def register_users_by_name(self, names: List[str]) -> Dict[str, int]:

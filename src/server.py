@@ -54,7 +54,8 @@ def create_flask_app(configs: dict) -> Flask:
 
 if __name__ == "__main__":
     config = {
-        "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
+        # "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
+        "SQLALCHEMY_DATABASE_URI": "sqlite://",
         "SCHEMA_ROOT": "schema",
         "JWT_SECRET_KEY": "1D5D22BA998265A2F9283E9B34EC4"
     }
@@ -64,8 +65,8 @@ if __name__ == "__main__":
 
     # Setup default users.
     with server.app_context():
-        database.session.add(Login(username="senior-librarian-agatha", password="books4life"))
-        database.session.add(Login(username="librarian-barry", password="books5life"))
+        database.session.add(Login(username="senior-librarian-agatha", password="books4life", role="senior"))
+        database.session.add(Login(username="librarian-barry", password="books5life", role="librarian"))
         database.session.commit()
 
     server.run(host="0.0.0.0")

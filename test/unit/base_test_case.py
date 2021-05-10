@@ -29,8 +29,8 @@ class BaseTestCase(TestCase):
         self.database = database
 
         with self.server.app_context():
-            self.database.session.add(Login(username="senior-librarian-agatha", password="books4life"))
-            self.database.session.add(Login(username="librarian-barry", password="books5life"))
+            self.database.session.add(Login(username="senior-librarian-agatha", password="books4life", role="senior"))
+            self.database.session.add(Login(username="librarian-barry", password="books5life", role="librarian"))
             self.database.session.commit()
 
         self.client = self.server.test_client()
