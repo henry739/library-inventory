@@ -25,11 +25,23 @@ def create_flask_app(configs: dict) -> Flask:
 
     api = Api(app)
 
-    api.add_resource(BooksController, f"{API_BASE}/books", resource_class_args=[app.config.get("SCHEMA_ROOT")])
+    api.add_resource(
+        BooksController,
+        f"{API_BASE}/books",
+        resource_class_args=[app.config.get("SCHEMA_ROOT")],
+    )
     api.add_resource(BooksIdController, f"{API_BASE}/books/<int:book_id>")
-    api.add_resource(UsersController, f"{API_BASE}/users", resource_class_args=[app.config.get("SCHEMA_ROOT")])
+    api.add_resource(
+        UsersController,
+        f"{API_BASE}/users",
+        resource_class_args=[app.config.get("SCHEMA_ROOT")],
+    )
     api.add_resource(UsersIdController, f"{API_BASE}/users/<int:user_id>")
-    api.add_resource(LoansController, f"{API_BASE}/loans", resource_class_args=[app.config.get("SCHEMA_ROOT")])
+    api.add_resource(
+        LoansController,
+        f"{API_BASE}/loans",
+        resource_class_args=[app.config.get("SCHEMA_ROOT")],
+    )
     api.add_resource(LoansIdController, f"{API_BASE}/loans/<int:loan_id>")
 
     return app
@@ -38,7 +50,7 @@ def create_flask_app(configs: dict) -> Flask:
 if __name__ == "__main__":
     config = {
         "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
-        "SCHEMA_ROOT": "schema"
+        "SCHEMA_ROOT": "schema",
     }
 
     server = create_flask_app(config)

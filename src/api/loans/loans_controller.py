@@ -18,6 +18,7 @@ class LoansController(Resource):
     """
     Handles requests for loan resources.
     """
+
     def __init__(self, schema_root):
         self._loan_length = 7
         self.validator = SchemaValidator(f"{schema_root}/loan.schema.json")
