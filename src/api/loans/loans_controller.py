@@ -33,31 +33,34 @@ class LoansController(Resource):
         now = datetime.utcnow()
         return now + timedelta(self._loan_length)
 
-    def can_user_borrow_book(self, user_id: int, book_id: int) -> bool:
+    def can_user_borrow_book(self, user_id: int, book_id: int) -> (bool, str):
         """
         Determine if the specified user can loan the specified book.
 
         :param user_id: ID of the user who wants to borrow the book.
         :param book_id: ID of the book the user wants to borrow.
-        :return: True if the user is able and allowed to borrow the book, False otherwise.
+        :return: True if the user is able and allowed to borrow the book, False otherwise. Error message if fails.
         """
         user = User.query.filter(User.id == user_id).first()
         book = Book.query.filter(Book.id == book_id).first()
 
-        if user is None or book is None:
-            return False
+        if user is None:
+            return False, "Cannot create loan. User does not exist in the system."
+
+        if book is None:
+            return False, "Cannot create loan. Book does not exist in the system."
 
         if len(user.loans) >= 4:
-            return False
+            return False, "Cannot create loan. User has four or more active loans."
 
         now = datetime.utcnow()
         if any(loan.due_date < now for loan in user.loans):
-            return False
+            return False, "Cannot create loan. User is overdue on one or more loans."
 
         if len(book.loans) > 0:
-            return False
+            return False, "Cannot create loan. Book is part of an active loan."
 
-        return True
+        return True, None
 
     @jwt_required()
     def post(self) -> Response:
@@ -79,13 +82,15 @@ class LoansController(Resource):
 
         # If the library can support this request, do so and persist. Otherwise return.
         loan = Loan(**request.json, due_date=due_date)
-        if self.can_user_borrow_book(user_id, book_id):
+        can_borrow, msg = self.can_user_borrow_book(user_id, book_id)
+        if can_borrow:
             # Persist
             database.session.add(loan)
             database.session.commit()
 
             return make_response(str(loan.id), 201)
-        return make_response(f"User {user_id} cannot be loaned {book_id}", 400)
+
+        return make_response(msg, 400)
 
     @jwt_required()
     def get(self) -> Response:

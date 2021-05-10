@@ -54,8 +54,7 @@ def create_flask_app(configs: dict) -> Flask:
 
 if __name__ == "__main__":
     config = {
-        # "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
-        "SQLALCHEMY_DATABASE_URI": "sqlite://",
+        "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
         "SCHEMA_ROOT": "schema",
         "JWT_SECRET_KEY": "1D5D22BA998265A2F9283E9B34EC4"
     }

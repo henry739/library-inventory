@@ -1,5 +1,5 @@
 import json
-from typing import List, Union
+from typing import List, Union, Dict, Tuple
 from unittest import TestCase
 
 from flask.testing import FlaskClient
@@ -84,4 +84,23 @@ class BaseTestCase(TestCase):
         )
 
         return json.loads(response.get_data(as_text=True)), response.status_code
+
+    def register_users_by_name(self, names: List[str]) -> Dict[str, int]:
+        """
+        Register multiple users with the system, building up a mapping of full_name -> id. This helper method
+        doesn't handle multiple users with the same name.
+
+        :param names: List of names to create users for
+        :return: Dict mapping full name to user id in the system
+        """
+        return {
+            user_full_name: int(self.post_json("/users", {"full_name": user_full_name})[0])
+            for user_full_name in names
+        }
+
+    def register_books_by_title(self, titles: List[str]) -> Dict[str, int]:
+        return {
+            title: int(self.post_json("/books", {"title": title, "author": "someone"})[0])
+            for title in titles
+        }
 

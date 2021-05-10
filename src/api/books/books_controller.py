@@ -53,4 +53,5 @@ class BooksController(Resource):
         title = request.args.get("title")
         result = Book.query.filter(Book.title == title).all()
 
-        return make_response(jsonify(result), 200)
+        jsonified = jsonify(result)
+        return make_response(jsonified, 200)

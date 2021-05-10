@@ -33,11 +33,9 @@ In order to start over with a fresh data model, run:
   - Each book object contains a list of active loans it is a part of. Since there may be many copies, and different
     books with the same title, this allows the librarian to select a specific copy, and use its id to create the 
     loan.
-  - [ ] TODO: Restrict viewing of user ID associated with the loan to senior librarians
 - `GET /api/v1/books/{id}`
   - Allows any librarian to search for a specific copy of a book by id
   - Each book object contains a list of active loans it is a part of (0 or 1)
-  - [ ] TODO: Restrict viewing of user ID associated with the loan to senior librarians
 - `DELETE /api/v1/books/{id}`
   - Allows a senior librarian to delete a book from the inventory by id
   - Disallowed if book is part of an active loan
@@ -49,6 +47,7 @@ In order to start over with a fresh data model, run:
   - A user cannot borrow a copy of a book if:
     - They have 4 or more active loans
     - The book copy is on loan
+    - They are overdue on any book
 - `GET /api/v1/loans/{id}`
   - Allows any librarian to search for a specific loan by id
   - This is here for completeness, as a web front-end may require this behaviour
@@ -92,9 +91,9 @@ In order to start over with a fresh data model, run:
 9. Agatha "checks in" the book by deleting the loan from the system
     - `DELETE /api/v1/loans/< bob's loan of 1984 id >`
 
-### To-Dos
-1. Improve unit test coverage
-2. Handle senior librarian route in book searches
+### Known limitations
+1. Only the senior librarian should be able to see the users associated with a loaned books. Currently, regular
+   librarians can also see the associated user ID.
 
 ### Future Work 
 1. Refactor to reduce duplication in boilerplate code

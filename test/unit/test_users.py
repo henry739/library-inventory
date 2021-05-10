@@ -1,26 +1,10 @@
-from typing import List, Dict
-
 from base_test_case import BaseTestCase
 
 
 class UsersTests(BaseTestCase):
     def setUp(self):
         super().setUp()
-        # self.login("librarian-barry", "books5life")
         self.login("senior-librarian-agatha", "books4life")
-
-    def register_users_by_name(self, names: List[str]) -> Dict[str, int]:
-        """
-        Register multiple users with the system, building up a mapping of full_name -> id. This helper method
-        doesn't handle multiple users with the same name.
-
-        :param names: List of names to create users for
-        :return: Dict mapping full name to user id in the system
-        """
-        return {
-            user_full_name: int(self.post_json("/users", {"full_name": user_full_name})[0])
-            for user_full_name in names
-        }
 
     def test_create_user_no_json_returns_invalid_status(self):
         rv, status = self.post_json("/users", None)
