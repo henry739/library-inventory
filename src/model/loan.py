@@ -18,6 +18,6 @@ class Loan(database.Model):
     book_id: int
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    due_date = Column(DateTime())
-    user_id = Column(Integer(), ForeignKey("registereduser.id"))
-    book_id = Column(Integer(), ForeignKey("book.id"))
+    due_date = Column(DateTime(), nullable=False)
+    user_id = Column(Integer(), ForeignKey("registereduser.id"), nullable=False)
+    book_id = Column(Integer(), ForeignKey("book.id"), nullable=False)
