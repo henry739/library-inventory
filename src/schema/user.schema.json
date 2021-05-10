@@ -4,10 +4,6 @@
   "title": "User",
   "type": "object",
   "properties": {
-    "id": {
-      "type": "integer",
-      "description": "Unique identifier"
-    },
     "full_name": {
       "type": "string",
       "description": "The user's full name",

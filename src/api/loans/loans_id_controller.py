@@ -9,7 +9,6 @@ from model.loan import Loan
 logger = logging.Logger(__name__)
 
 
-# TODO: Disallow deletion of users and books with active loans.
 class LoansIdController(Resource):
     """
     Handles requests for managing specific loans

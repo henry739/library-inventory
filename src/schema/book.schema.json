@@ -4,10 +4,6 @@
   "title": "Book",
   "type": "object",
   "properties": {
-    "id": {
-      "type": "integer",
-      "description": "Unique identifier"
-    },
     "title": {
       "type": "string",
       "description": "The book's title",

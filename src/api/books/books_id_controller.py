@@ -35,7 +35,6 @@ class BooksIdController(Resource):
         :return: ID of the deleted book and 200 if successful, else 404.
         """
         book = Book.query.filter(Book.id == book_id).first()
-
         if book is None:
             return make_response("Book does not exist in the system", 404)
 

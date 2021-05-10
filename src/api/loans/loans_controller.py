@@ -16,18 +16,29 @@ logger = logging.Logger(__name__)
 
 class LoansController(Resource):
     """
-    Handles requests for checking books in and out
+    Handles requests for loan resources.
     """
-
     def __init__(self):
         self._loan_length = 7
         self.validator = SchemaValidator("schema/loan.schema.json")
 
-    def generate_due_date(self):
+    def generate_due_date(self) -> datetime:
+        """
+        Generate a date-time in the future.
+
+        :return: Datetime in the future, determined by library policy.
+        """
         now = datetime.utcnow()
         return now + timedelta(self._loan_length)
 
-    def is_loan_possible(self, user_id, book_id):
+    def can_user_borrow_book(self, user_id: int, book_id: int) -> bool:
+        """
+        Determine if the specified user can loan the specified book.
+
+        :param user_id: ID of the user who wants to borrow the book.
+        :param book_id: ID of the book the user wants to borrow.
+        :return: True if the user is able and allowed to borrow the book, False otherwise.
+        """
         user = User.query.filter(User.id == user_id).first()
         book = Book.query.filter(Book.id == book_id).first()
 
@@ -44,37 +55,40 @@ class LoansController(Resource):
         if len(book.loans) > 0:
             return False
 
-        # TODO: Handle stale data / race conditions
         return True
 
     def post(self) -> Response:
-        """ """
-        # Validate
+        """
+        Create a new loan in the system.
+
+        :return: Response containing the loan ID and a status of 201 on success. Returns 400 on validation error.
+        """
         try:
             self.validator.validate(request.json)
-            if "id" in request.json:
-                return make_response("New records should not contain an ID", 400)
-
         except ValidationError:
             logger.exception(f"Request body failed validation against JsonSchema")
             return make_response("Invalid request format", 400)
 
+        # Retrieve values from request
         user_id = request.json.get("user_id")
         book_id = request.json.get("book_id")
         due_date = self.generate_due_date()
 
-        # Ensure the library can support this loan
-        loan = Loan(user_id=user_id, book_id=book_id, due_date=due_date)
-        if self.is_loan_possible(user_id, book_id):
+        # If the library can support this request, do so and persist. Otherwise return.
+        loan = Loan(**request.json, due_date=due_date)
+        if self.can_user_borrow_book(user_id, book_id):
             # Persist
             db_session.add(loan)
             db_session.commit()
 
             return make_response(str(loan.id), 201)
-
-        return make_response(f"User {user_id} cannot be loaned {book_id}", 200)
+        return make_response(f"User {user_id} cannot be loaned {book_id}", 400)
 
     def get(self) -> Response:
-        """ """
+        """
+        Return all loans in the system.
+
+        :return: Response containing all loans in the system and a status of 200 on success.
+        """
         loans = Loan.query.all()
         return make_response(jsonify(loans), 200)

@@ -22,33 +22,28 @@ class UsersController(Resource):
     def post(self) -> Response:
         """
         Create a new user in the system.
-        :return: User ID and 201 on successful creation, 400 if validation fails.
-        """
 
-        # Validate
+        :return: Response containing the user ID and a status of 201 on success. Returns 400 on validation error.
+        """
         try:
             self.validator.validate(request.json)
-            if "id" in request.json:
-                return make_response("New records should not contain an ID", 400)
-
         except ValidationError:
             logger.exception(f"Request body failed validation against JsonSchema")
             return make_response("Invalid request format", 400)
 
         # Persist
-        user = User(
-            **request.json
-        )  # Unexpected fields are disallowed during validation.
+        user = User(**request.json)  # The above validation catches unwanted fields.
         db_session.add(user)
         db_session.commit()
 
-        # Respond
         return make_response(str(user.id), 201)
 
     def get(self) -> Response:
         """
-        Return all users in the system exactly matching the full_name GET parameter.
-        :return: List of users and 200 on success
+        Return all users in the system with full_name matching the GET parameter. If not supplied, an empty list
+        shall be returned.
+
+        :return: Response containing a list of matching users and a status of 200 on success.
         """
         full_name = request.args.get("full_name")
         result = User.query.filter(User.full_name == full_name).all()
