@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 from flask import jsonify, request, make_response, Response
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from jsonschema import ValidationError
 
@@ -58,6 +59,7 @@ class LoansController(Resource):
 
         return True
 
+    @jwt_required()
     def post(self) -> Response:
         """
         Create a new loan in the system.
@@ -85,6 +87,7 @@ class LoansController(Resource):
             return make_response(str(loan.id), 201)
         return make_response(f"User {user_id} cannot be loaned {book_id}", 400)
 
+    @jwt_required()
     def get(self) -> Response:
         """
         Return all loans in the system.

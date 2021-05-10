@@ -1,6 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, Response
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from model.database import database
@@ -14,6 +15,7 @@ class UsersIdController(Resource):
     Handles requests for specific user resources.
     """
 
+    @jwt_required()
     def get(self, user_id: int) -> Response:
         """
         Return user with ID=user_id, if exists.
@@ -27,6 +29,7 @@ class UsersIdController(Resource):
 
         return make_response(jsonify(user), 200)
 
+    @jwt_required()
     def delete(self, user_id: int) -> Response:
         """
         Delete the user with user_id if exists.

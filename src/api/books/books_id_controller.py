@@ -1,6 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, Response
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from model.database import database
@@ -14,6 +15,7 @@ class BooksIdController(Resource):
     Handles requests for specific book resources.
     """
 
+    @jwt_required()
     def get(self, book_id: int) -> Response:
         """
         Return book with ID of book_id, if exists.
@@ -27,6 +29,7 @@ class BooksIdController(Resource):
 
         return make_response(jsonify(book), 200)
 
+    @jwt_required()
     def delete(self, book_id: int) -> Response:
         """
         Delete the book with book_id if exists.

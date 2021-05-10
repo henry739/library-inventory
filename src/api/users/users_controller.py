@@ -1,6 +1,7 @@
 import logging
 
 from flask import jsonify, request, make_response, Response
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from jsonschema import ValidationError
 
@@ -19,6 +20,7 @@ class UsersController(Resource):
     def __init__(self, schema_root):
         self.validator = SchemaValidator(f"{schema_root}/user.schema.json")
 
+    @jwt_required()
     def post(self) -> Response:
         """
         Create a new user in the system.
@@ -38,6 +40,7 @@ class UsersController(Resource):
 
         return make_response(str(user.id), 201)
 
+    @jwt_required()
     def get(self) -> Response:
         """
         Return all users in the system with full_name matching the GET parameter. If not supplied, an empty list

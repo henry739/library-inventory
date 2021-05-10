@@ -4,6 +4,10 @@ from base_test_case import BaseTestCase
 
 
 class UsersTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.login("senior-librarian-agatha", "books4life")
+
     def register_users_by_name(self, names: List[str]) -> Dict[str, int]:
         """
         Register multiple users with the system, building up a mapping of full_name -> id. This helper method
@@ -36,16 +40,16 @@ class UsersTests(BaseTestCase):
     def test_create_user_with_full_name_succeeds(self):
         rv, status = self.post_json("/users", {"full_name": "Alice"})
 
-        self.assertEqual("1", rv)
         self.assertEqual(201, status)
+        self.assertEqual("1", rv)
 
     def test_created_user_can_be_retrieved_by_id(self):
         resource_id, _ = self.post_json("/users", {"full_name": "Alice"})
         user, status = self.get_by_id("/users", resource_id)
 
+        self.assertEqual(200, status)
         self.assertEqual("Alice", user.get("full_name"))
         self.assertEqual(int(resource_id), user.get("id"))
-        self.assertEqual(200, status)
 
     def test_get_missing_user_returns_404(self):
         rv, status = self.get_by_id("/users", 100)
@@ -98,8 +102,8 @@ class UsersTests(BaseTestCase):
         # Assert
         self.assertEqual(200, pre_delete_status)
         self.assertEqual(200, delete_status)
-        self.assertEqual(user_id, deleted_user_id)
         self.assertEqual(404, post_delete_status)
+        self.assertEqual(user_id, deleted_user_id)
 
     def test_deletion_of_missing_resource_returns_404(self):
         rv, status = self.delete_by_id("/users", 100)
