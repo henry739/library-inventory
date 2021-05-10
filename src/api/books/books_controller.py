@@ -16,8 +16,8 @@ class BooksController(Resource):
     Handles requests for book resources.
     """
 
-    def __init__(self):
-        self.validator = SchemaValidator("schema/book.schema.json")
+    def __init__(self, schema_root):
+        self.validator = SchemaValidator(f"{schema_root}/book.schema.json")
 
     def post(self) -> Response:
         """

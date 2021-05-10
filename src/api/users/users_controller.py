@@ -16,8 +16,8 @@ class UsersController(Resource):
     Handles requests for user resources.
     """
 
-    def __init__(self):
-        self.validator = SchemaValidator("schema/user.schema.json")
+    def __init__(self, schema_root):
+        self.validator = SchemaValidator(f"{schema_root}/user.schema.json")
 
     def post(self) -> Response:
         """
