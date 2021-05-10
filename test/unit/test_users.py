@@ -1,39 +1,83 @@
-import json
+from typing import List, Dict
+
 from base_test_case import BaseTestCase
 
 
 class UsersTests(BaseTestCase):
-    def test_get_returns_404_if_no_user(self):
-        response = self.client.get("/api/v1/users/1")
-        self.assertEqual(404, response.status_code)
+    def register_users_by_name(self, names: List[str]) -> Dict[str, int]:
+        """
+        Register multiple users with the system, building up a mapping of full_name -> id. This helper method
+        doesn't handle multiple users with the same name.
 
-    def test_get_returns_200_if_user_exists(self):
-        # Arrange
-        self.client.post("/api/v1/users", data=json.dumps({"full_name": "Alice"}), content_type="application/json")
+        :param names: List of names to create users for
+        :return: Dict mapping full name to user id in the system
+        """
+        return {
+            user_full_name: int(self.post_json("/users", {"full_name": user_full_name})[0])
+            for user_full_name in names
+        }
 
-        # Act & Assert
-        response = self.client.get("/api/v1/users/1")
-        self.assertEqual(200, response.status_code)
+    def test_create_user_no_json_returns_invalid_status(self):
+        rv, status = self.post_json("/users", None)
+        self.assertEqual(400, status)
 
-    def test_get_returns_correct_user_when_multiple_users_exist(self):
-        # Arrange
-        self.client.post(
-            "/api/v1/users",
-            data=json.dumps({"full_name": "Alice"}),
-            content_type="application/json"
-        )
-        self.client.post(
-            "/api/v1/users",
-            data=json.dumps({"full_name": "Charlie"}),
-            content_type="application/json"
-        )
-        bob_response = self.client.post(
-            "/api/v1/users",
-            data=json.dumps({"full_name": "Bob"}),
-            content_type="application/json"
-        )
-        bob_id = bob_response.get_data(as_text=True)
+    def test_create_user_empty_json_returns_invalid_status(self):
+        rv, status = self.post_json("/users", {})
+        self.assertEqual(400, status)
 
-        # Act & Assert
-        response = json.loads(self.client.get(f"/api/v1/users/{bob_id}").get_data(as_text=True))
-        self.assertEqual("Bob", response.get("full_name"))
+    def test_create_user_with_extra_property_returns_invalid_status(self):
+        rv, status = self.post_json("/users", {"full_name": "Alice", "extra": "property"})
+        self.assertEqual(400, status)
+
+    def test_create_user_with_id_returns_invalid_status(self):
+        rv, status = self.post_json("/users", {"full_name": "Alice", "id": 1})
+        self.assertEqual(400, status)
+
+    def test_create_user_with_full_name_succeeds(self):
+        rv, status = self.post_json("/users", {"full_name": "Alice"})
+
+        self.assertEqual("1", rv)
+        self.assertEqual(201, status)
+
+    def test_created_user_can_be_retrieved_by_id(self):
+        resource_id, _ = self.post_json("/users", {"full_name": "Alice"})
+        user, status = self.get_by_id("/users", resource_id)
+
+        self.assertEqual("Alice", user.get("full_name"))
+        self.assertEqual(int(resource_id), user.get("id"))
+        self.assertEqual(200, status)
+
+    def test_multiple_users_can_be_retrieved_by_id(self):
+        registrations = self.register_users_by_name(["Alice", "Bob", "Charlie", "David", "Eve"])
+
+        # For each registered user, ensure that the returned object is correct
+        for full_name, user_id in registrations.items():
+            user, status = self.get_by_id("/users", user_id)
+
+            self.assertEqual(200, status)
+            self.assertEqual(user_id, user.get("id"))
+            self.assertEqual(full_name, user.get("full_name"))
+
+    def test_users_can_be_searched_for_by_full_name(self):
+        registrations = self.register_users_by_name(["Alice", "Bob", "Charlie"])
+
+        for full_name, user_id in registrations.items():
+            users, status = self.get_with_params("/users", {"full_name": full_name})
+
+            self.assertEqual(200, status)
+            self.assertEqual(1, len(users))
+            self.assertEqual(user_id, users[0].get("id"))
+            self.assertEqual(full_name, users[0].get("full_name"))
+
+    def test_search_returns_multiple_users_if_they_have_same_full_name(self):
+        self.post_json("/users", {"full_name": "Alice"})
+        _, creation_status = self.post_json("/users", {"full_name": "Alice"})
+
+        users, search_status = self.get_with_params("/users", {"full_name": "Alice"})
+
+        self.assertEqual(201, creation_status)
+        self.assertEqual(200, search_status)
+        self.assertEqual(2, len(users))
+        self.assertEqual("Alice", users[0].get("full_name"))
+        self.assertEqual("Alice", users[1].get("full_name"))
+        self.assertNotEqual(users[0].get("id"), users[1].get("id"))
