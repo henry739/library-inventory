@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, make_response, Response
 from flask_restful import Resource
 
-from database.database import db_session
+from model.database import database
 from model.book import Book
 
 logger = logging.Logger(__name__)
@@ -44,7 +44,7 @@ class BooksIdController(Resource):
                 400,
             )
 
-        db_session.delete(book)
-        db_session.commit()
+        database.session.delete(book)
+        database.session.commit()
 
         return make_response(str(book.id), 200)

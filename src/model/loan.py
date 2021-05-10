@@ -3,11 +3,11 @@ from datetime import datetime
 
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 
-from database.database import ModelBase
+from model.database import database
 
 
 @dataclass
-class Loan(ModelBase):
+class Loan(database.Model):
     """ """
 
     __tablename__ = "loan"

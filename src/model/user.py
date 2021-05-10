@@ -4,12 +4,12 @@ from typing import List
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from database.database import ModelBase
+from model.database import database
 from model.loan import Loan
 
 
 @dataclass
-class User(ModelBase):
+class User(database.Model):
     """
     A single registered user of the library. Note, this does not include Librarians.
     """

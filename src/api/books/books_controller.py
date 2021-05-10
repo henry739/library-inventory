@@ -4,7 +4,7 @@ from flask import jsonify, request, make_response, Response
 from flask_restful import Resource
 from jsonschema import ValidationError
 
-from database.database import db_session
+from model.database import database
 from model.book import Book
 from schema.schema_validator import SchemaValidator
 
@@ -33,8 +33,8 @@ class BooksController(Resource):
 
         # Persist
         book = Book(**request.json)  # The above validation catches unwanted fields.
-        db_session.add(book)
-        db_session.commit()
+        database.session.add(book)
+        database.session.commit()
 
         return make_response(str(book.id), 201)
 

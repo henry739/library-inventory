@@ -5,7 +5,7 @@ from flask import jsonify, request, make_response, Response
 from flask_restful import Resource
 from jsonschema import ValidationError
 
-from database.database import db_session
+from model.database import database
 from model.book import Book
 from model.loan import Loan
 from model.user import User
@@ -78,8 +78,8 @@ class LoansController(Resource):
         loan = Loan(**request.json, due_date=due_date)
         if self.can_user_borrow_book(user_id, book_id):
             # Persist
-            db_session.add(loan)
-            db_session.commit()
+            database.session.add(loan)
+            database.session.commit()
 
             return make_response(str(loan.id), 201)
         return make_response(f"User {user_id} cannot be loaned {book_id}", 400)

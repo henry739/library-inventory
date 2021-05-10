@@ -4,12 +4,12 @@ from typing import List
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from database.database import ModelBase
+from model.database import database
 from model.loan import Loan
 
 
 @dataclass
-class Book(ModelBase):
+class Book(database.Model):
     """
     A single copy of a book in the library's inventory.
     """
