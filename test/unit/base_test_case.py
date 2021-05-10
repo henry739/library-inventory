@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Union
 from unittest import TestCase
 
 from flask.testing import FlaskClient
@@ -45,7 +45,16 @@ class BaseTestCase(TestCase):
             f"{self.API_BASE}{endpoint}/{resource_id}"
         )
 
-        return json.loads(response.get_data(as_text=True)), response.status_code
+        if response.status_code == 200:
+            return json.loads(response.get_data(as_text=True)), response.status_code
+        return response.get_data(as_text=True), response.status_code
+
+    def delete_by_id(self, endpoint: str, resource_id: Union[int, str]) -> (str, int):
+        response = self.client.delete(
+            f"{self.API_BASE}{endpoint}/{resource_id}"
+        )
+
+        return response.get_data(as_text=True), response.status_code
 
     def get_with_params(self, endpoint: str, params: dict) -> (List[dict], int):
         response = self.client.get(
@@ -54,3 +63,4 @@ class BaseTestCase(TestCase):
         )
 
         return json.loads(response.get_data(as_text=True)), response.status_code
+

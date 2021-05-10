@@ -81,3 +81,18 @@ class UsersTests(BaseTestCase):
         self.assertEqual("Alice", users[0].get("full_name"))
         self.assertEqual("Alice", users[1].get("full_name"))
         self.assertNotEqual(users[0].get("id"), users[1].get("id"))
+
+    def test_deletion_of_user_causes_get_by_id_to_return_404(self):
+        # Arrange and verify normal state
+        user_id, _ = self.post_json("/users", {"full_name": "Alice"})
+        _, pre_delete_status = self.get_by_id("/users", user_id)
+
+        # Delete and attempt to retrieve
+        deleted_user_id, delete_status = self.delete_by_id("/users", user_id)
+        _, post_delete_status = self.get_by_id("/users", user_id)
+
+        # Assert
+        self.assertEqual(200, pre_delete_status)
+        self.assertEqual(200, delete_status)
+        self.assertEqual(user_id, deleted_user_id)
+        self.assertEqual(404, post_delete_status)

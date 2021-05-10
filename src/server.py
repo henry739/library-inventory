@@ -36,16 +36,12 @@ def create_flask_app(configs: dict) -> Flask:
 
 
 if __name__ == "__main__":
-    local_config = {
-        "SQLALCHEMY_DATABASE_URI": "sqlite://",
-        "SCHEMA_ROOT": "schema"
-    }
     config = {
         "SQLALCHEMY_DATABASE_URI": "postgresql+psycopg2://elder_librarian:books@library-db:5432/library",
         "SCHEMA_ROOT": "schema"
     }
 
-    server = create_flask_app(local_config)
+    server = create_flask_app(config)
     setup_database(server)
 
     server.run(host="0.0.0.0")
